@@ -9,92 +9,9 @@
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 10px;
     padding: 10px;
-} */
-
-
-body{
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
 }
 
-
-.gallery{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    padding: 10px;
-
-}
-
-
-.gallery img{
-    width: 100%;
-    height: auto;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.gallery img:hover{
-    transform: scale(1.05);
-}
-
-.lightbox{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0, 0.8);
-    justify-content: center;
-    display: flex;
-    align-items: center;
-
-}
-
-.lightbox img{
-    max-width: 90%;
-    max-height: 90%;
-}
-
-.lightbox .cross{
-    position: absolute;
-    top: 20px;
-    right: 30px;
-    cursor: pointer;
-    font-size: 20px;
-    color: white;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* .gallery img {
+.gallery img {
     width: 100%;
     height: auto;
     border-radius: 8px;
@@ -132,3 +49,179 @@ body{
     font-size: 30px;
     cursor: pointer;
 } */
+
+
+
+@import url("https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;400;500;600;700&family=Manrope:wght@200;300;400;500;600;700;800&display=swap");
+
+:root {
+  --section-bg-color: #f8eded59;
+}
+
+::selection {
+  background-color: #e4bad4;
+  color: #fff;
+}
+
+body {
+  letter-spacing: 1px;
+  font-family: "Manrope", sans-serif;
+  color: rgb(75, 7, 75);
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Comfortaa", cursive;
+}
+
+h1 {
+  background-image: linear-gradient(to left, #62274a, #e4bad4d3);
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.search {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+#searchInput {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+#searchInput:focus {
+  border-color: #be9fb2;
+  box-shadow: 0 0 0 0.25rem #84506f2d;
+  outline: none;
+}
+
+#searchBtn {
+  padding: 10px 20px;
+  background-color: #92d4b7;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: "Comfortaa", cursive;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#searchBtn:hover {
+  background-color: #6bae91;
+}
+
+header {
+  background-color: var(--section-bg-color);
+  padding: 20px 0;
+}
+
+section {
+  background-color: var(--section-bg-color);
+  min-height: 100vh;
+  padding: 20px 0;
+}
+
+.inputResults {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.card {
+  width: 100%;
+  max-width: 300px;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.card img {
+  width: 100%;
+  height: 330px;
+  object-fit: cover;
+  transition: transform 250ms ease-in-out, opacity 100ms linear;
+}
+
+.card:hover img {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+.cardTitle {
+  position: absolute;
+  background-image: linear-gradient(to right, #e4bad4, #92d4b7);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  left: 50%;
+  top: -20%;
+  transform: translate(-50%, -50%);
+  transition: top 500ms ease-in-out;
+  padding: 10px;
+  width: 80%;
+}
+
+.fixedCard:hover .cardTitle {
+  top: 50%;
+}
+
+.showMore {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+#showMoreBtn {
+  padding: 10px 20px;
+  background-color: #92d4b7;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-family: "Comfortaa", cursive;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+#showMoreBtn:hover {
+  background-color: #6bae91;
+}
+
+footer {
+  background-color: var(--section-bg-color);
+  padding: 20px 0;
+}
+
+@media screen and (max-width: 550px) {
+  :root {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  :root {
+    font-size: 12px;
+  }
+}
