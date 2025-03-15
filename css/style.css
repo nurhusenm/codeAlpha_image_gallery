@@ -141,13 +141,26 @@ section {
   padding: 20px 0;
 }
 
-.inputResults {
+/* .inputResults {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap:inherit;
   gap: 20px;
   justify-content: center;
+} */
+.inputResults {
+  display: flex;
+  flex-wrap: wrap; /* Use wrap to allow items to move to the next line */
+  gap: 20px; /* Space between items */
+  justify-content: center; /* Center items horizontally */
+  margin: 0 20px; /* Add margin on left and right */
 }
 
+.inputResults img {
+  flex: 1 1 calc(25% - 20px);
+  max-width: 100%;
+  border-radius: 8px; 
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+}
 .card {
   width: 100%;
   max-width: 300px;
