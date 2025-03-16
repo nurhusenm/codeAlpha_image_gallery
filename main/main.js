@@ -1,4 +1,5 @@
 // const gallery = document.querySelector(".gallery");
+
 // const { createApi } = require("unsplash-js");
 // import { createApi } from "unsplash-js";
 // const { createApi } = window.Unsplash;
@@ -22,8 +23,15 @@
 // Access the Unsplash API client from the global window object
 // Access the Unsplash API client from the global window object
 // const { createApi } = window.Unsplash;
+
+const toggle = document.querySelector(".toggle");
+
+toggle.addEventListener("click", () => {
+  document.body.style.backgroundColor = "black";
+});
+
 document.addEventListener("DOMContentLoaded", function () {
-  let searchInput = "";
+  let searchInput = "cars";
   let page = 1;
   let data = [];
 
@@ -38,6 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
         data = apiResponse.results;
       } else {
         data = data.concat(apiResponse.results);
+        console.log(data);
       }
       displayImgs();
     }
@@ -88,6 +97,17 @@ document.addEventListener("DOMContentLoaded", function () {
     searchInput = document.getElementById("searchInput").value;
     searchImgs();
   }
+  performSearch();
+
+  document.querySelector(".card-img").addEventListener("click", () => {
+    const lightbox = document.createElement("div");
+    lightbox.classList.add("lightbox");
+    lightbox.innerHTML = `<img src="${data[i].urls.small}" alt="${data[i].alt_description}" /> <span class="cross">&;times</span>`;
+    document.body.appendChild(lightbox);
+    lightbox.querySelector(".cross").addEventListener("click", () => {
+      document.body.removeChild(lightbox);
+    });
+  });
 
   // Event listener for Enter key on search input
   document
