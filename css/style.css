@@ -31,19 +31,22 @@
 
 :root {
   --section-bg-color: #f8eded59;
+  --text-color: rgb(75, 7, 75);
+  --card-text-color: #333;
 }
 
 ::selection {
   background-color: #e4bad4;
-  color: #fff;
+  color: var(--text-color);
 }
 
 body {
   letter-spacing: 1px;
   font-family: "Manrope", sans-serif;
-  color: rgb(75, 7, 75);
+  color: var(--text-color);
   margin: 0;
   padding: 0;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 h1,
@@ -198,16 +201,38 @@ section {
 }
 
 .toggle {
-  /* background-color: #6bae91; */
-  background-color: black;
-  color: white;
-
- 
-
-
+  padding: 10px 15px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background-color: transparent;
+  border: 2px solid #92d4b7;
+  color: #92d4b7;
+  transition: all 0.3s ease;
 }
-.toggle  foo6ter span{
+
+.toggle:hover {
+  background-color: #92d4b7;
   color: white;
+}
+
+.toggle i {
+  font-size: 1.2rem;
+}
+
+.card-body {
+  padding: 15px;
+  background-color: rgba(255, 255, 255, 0.9);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.card-body a {
+  color: var(--card-text-color);
+  text-decoration: none;
+  font-size: 0.9rem;
+  display: block;
+  text-align: center;
+  transition: color 0.3s;
 }
 
 footer {
@@ -239,21 +264,29 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
 }
 
 .lightbox img {
-  max-width: 90%;
-  max-height: 90%;
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
 }
 
-.close {
+.cross {
   position: absolute;
-  top: 20px;
-  right: 30px;
+  top: -40px;
+  right: -40px;
   color: white;
   font-size: 30px;
   cursor: pointer;
-} 
+}
 
 @media screen and (max-width: 550px) {
   :root {
@@ -265,4 +298,47 @@ footer {
   :root {
     font-size: 12px;
   }
+}
+
+/* Dark theme styles */
+body.dark-theme {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+body.dark-theme ::selection {
+  background-color: #e4bad4;
+  color: #ffffff;
+}
+
+body.dark-theme .card-body {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+body.dark-theme .card-body a {
+  color: #ffffff;
+}
+
+body.dark-theme header,
+body.dark-theme section,
+body.dark-theme footer {
+  background-color: #1a1a1a;
+}
+
+body.dark-theme h1 {
+  background-image: linear-gradient(to left, #ff9edb, #e4bad4);
+}
+
+body.dark-theme footer a {
+  color: #92d4b7;
+}
+
+body.dark-theme #searchInput {
+  background-color: #333;
+  color: #ffffff;
+  border-color: #555;
+}
+
+body.dark-theme #searchInput::placeholder {
+  color: #aaa;
 }

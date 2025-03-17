@@ -25,15 +25,36 @@
 // const { createApi } = window.Unsplash;
 
 const toggle = document.querySelector(".toggle");
+let isDark = false;
 
 toggle.addEventListener("click", () => {
-  document.body.style.backgroundColor = "black";
+  isDark = !isDark;
+  document.body.classList.toggle("dark-theme");
+  // Update toggle icon
+  const icon = toggle.querySelector("i");
+  if (isDark) {
+    icon.classList.remove("fa-sun");
+    icon.classList.add("fa-moon");
+  } else {
+    icon.classList.remove("fa-moon");
+    icon.classList.add("fa-sun");
+  }
 });
 
 document.addEventListener("DOMContentLoaded", function () {
   let searchInput = "cars";
   let page = 1;
   let data = [];
+
+  // Add function to fetch random images
+  async function fetchRandomImages() {
+    const accessKey = "m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4";
+    const randomUrl = `https://api.unsplash.com/photos/random?count=12&client_id=${accessKey}`;
+    const response = await fetch(randomUrl);
+    const randomData = await response.json();
+    data = randomData;
+    displayImgs();
+  }
 
   async function searchImgs() {
     const accessKey = "m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4";
@@ -62,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function () {
         searchResults += `
           <div class="col-md-6 col-lg-4">
             <div class="card searchImg">
-              <div id="cardImg">
+              <div class="cardImg" data-index="${i}">
                 <img
                   src="${data[i].urls.small}"
                   class="card-img-top"
@@ -85,6 +106,27 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     inputResults.innerHTML = searchResults;
 
+    // Add click listeners to all images after they're displayed
+    const cardImages = document.querySelectorAll(".cardImg");
+    cardImages.forEach((card) => {
+      card.addEventListener("click", (e) => {
+        const index = card.dataset.index;
+        const lightbox = document.createElement("div");
+        lightbox.classList.add("lightbox");
+        lightbox.innerHTML = `
+          <div class="lightbox-content">
+            <img src="${data[index].urls.regular}" alt="${data[index].alt_description}" />
+            <span class="cross">&times;</span>
+          </div>
+        `;
+        document.body.appendChild(lightbox);
+
+        lightbox.querySelector(".cross").addEventListener("click", () => {
+          document.body.removeChild(lightbox);
+        });
+      });
+    });
+
     const showMoreBtn = document.getElementById("showMoreBtn");
     if (data.length > 0) {
       showMoreBtn.classList.remove("d-none");
@@ -99,15 +141,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   performSearch();
 
-  document.querySelector(".card-img").addEventListener("click", () => {
-    const lightbox = document.createElement("div");
-    lightbox.classList.add("lightbox");
-    lightbox.innerHTML = `<img src="${data[i].urls.small}" alt="${data[i].alt_description}" /> <span class="cross">&;times</span>`;
-    document.body.appendChild(lightbox);
-    lightbox.querySelector(".cross").addEventListener("click", () => {
-      document.body.removeChild(lightbox);
-    });
-  });
+  // Start with random images instead of immediate search
+  fetchRandomImages();
 
   // Event listener for Enter key on search input
   document
