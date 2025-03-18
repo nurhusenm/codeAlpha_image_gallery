@@ -1,29 +1,3 @@
-// const gallery = document.querySelector(".gallery");
-
-// const { createApi } = require("unsplash-js");
-// import { createApi } from "unsplash-js";
-// const { createApi } = window.Unsplash;
-// console.log(window.unsplash);
-
-// async function fetchImages() {
-//   const response = await fetch(
-//   );
-//   const data = await response.json();
-//   console.log(data);
-//   displayImages(data);
-// }
-// const unsplash =
-//   "https://api.unsplash.com/photos/random?count=20&client_id=m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4";
-
-// const unsplash = createApi({
-//   accessKey:
-//     "https://api.unsplash.com/photos/random?count=20&client_id=m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4",
-// });
-
-// Access the Unsplash API client from the global window object
-// Access the Unsplash API client from the global window object
-// const { createApi } = window.Unsplash;
-
 const toggle = document.querySelector(".toggle");
 let isDark = false;
 
@@ -42,71 +16,148 @@ toggle.addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-  let searchInput = "cars";
+  let searchInput = "";
   let page = 1;
   let data = [];
+  let isLoading = false; // Add loading state
 
-  // Add function to fetch random images
-  async function fetchRandomImages() {
-    const accessKey = "m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4";
-    const randomUrl = `https://api.unsplash.com/photos/random?count=12&client_id=${accessKey}`;
-    const response = await fetch(randomUrl);
-    const randomData = await response.json();
-    data = randomData;
-    displayImgs();
+  // Add loading indicator function
+  function showLoading() {
+    const inputResults = document.getElementById("inputResults");
+    inputResults.innerHTML = '<div class="loading">Loading images...</div>';
   }
 
-  async function searchImgs() {
-    const accessKey = "m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4";
-    const url = `https://api.unsplash.com/search/photos?page=${page}&query=${searchInput}&client_id=${accessKey}`;
-    const searchApi = await fetch(url);
-    const apiResponse = await searchApi.json();
+  async function fetchRandomImages() {
+    try {
+      if (isLoading) return; // Prevent multiple simultaneous requests
+      isLoading = true;
+      showLoading();
 
-    if (!apiResponse.error) {
-      if (page === 1) {
-        data = apiResponse.results;
+      const accessKey = "m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4";
+      const randomUrl = `https://api.unsplash.com/photos/random?count=10&client_id=${accessKey}`;
+      const response = await fetch(randomUrl);
+      const randomData = await response.json();
+
+      if (response.ok) {
+        data = randomData;
+        displayImgs();
       } else {
-        data = data.concat(apiResponse.results);
-        console.log(data);
+        console.error("Error fetching random images:", randomData);
+        data = [];
+        displayImgs();
       }
+    } catch (error) {
+      console.error("Error fetching random images:", error);
+      data = [];
       displayImgs();
+    } finally {
+      isLoading = false;
     }
   }
 
-  function displayImgs() {
+  async function searchImgs() {
+    try {
+      const trimmedInput = searchInput.trim();
+      if (!trimmedInput) {
+        // Show error message for empty search
+        data = [];
+        displayImgs("Please enter a search term like:- cars, homes ...");
+        return;
+      }
+
+      if (isLoading) return; // Prevent multiple simultaneous requests
+      isLoading = true;
+      showLoading();
+
+      const accessKey = "m_Zlnhtm6cNpi8NVLZsBcn5K-Ph6IFcLYq6Dc5m15s4";
+      const url = `https://api.unsplash.com/search/photos?page=${page}&query=${trimmedInput}&client_id=${accessKey}&per_page=12`;
+      const searchApi = await fetch(url);
+      const apiResponse = await searchApi.json();
+
+      if (searchApi.ok) {
+        if (page === 1) {
+          data = apiResponse.results;
+        } else {
+          data = data.concat(apiResponse.results);
+        }
+        displayImgs();
+      } else {
+        console.error("Error searching images:", apiResponse);
+        data = [];
+        displayImgs("An error occurred while searching");
+      }
+    } catch (error) {
+      console.error("Error searching images:", error);
+      data = [];
+      displayImgs("An error occurred while searching");
+    } finally {
+      isLoading = false;
+    }
+  }
+
+  function displayImgs(errorMessage = "") {
     const inputResults = document.getElementById("inputResults");
     let searchResults = "";
-    if (data.length === 0) {
+
+    if (errorMessage) {
+      searchResults = `<p class='text-center fw-bold error-message'>${errorMessage}</p>`;
+    } else if (data.length === 0) {
       searchResults = "<p class='text-center fw-bold'>No results found.</p>";
     } else {
-      for (let i = 0; i < data.length; i++) {
-        searchResults += `
+      // Pre-load images before displaying
+      const imagePromises = data.map((item) => {
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = resolve;
+          img.onerror = reject;
+          img.src = item.urls.small;
+        });
+      });
+
+      Promise.all(imagePromises).then(() => {
+        searchResults = data
+          .map(
+            (item, i) => `
           <div class="col-md-6 col-lg-4">
             <div class="card searchImg">
               <div class="cardImg" data-index="${i}">
                 <img
-                  src="${data[i].urls.small}"
+                  src="${item.urls.small}"
                   class="card-img-top"
-                  alt="${data[i].alt_description}"
+                  alt="${item.alt_description}"
+                  loading="lazy"
                 />
               </div>
               <div class="card-body">
                 <a
-                  href="${data[i].links.html}"
+                  href="${item.links.html}"
                   class="card-text"
                   target="_blank"
                   rel="noopener"
                 >
-                  ${data[i].alt_description}
+                  ${item.alt_description}
                 </a>
               </div>
             </div>
-          </div>`;
-      }
-    }
-    inputResults.innerHTML = searchResults;
+          </div>`
+          )
+          .join("");
 
-    // Add click listeners to all images after they're displayed
+        inputResults.innerHTML = searchResults;
+        addImageClickListeners();
+      });
+    }
+
+    if (errorMessage || data.length === 0) {
+      inputResults.innerHTML = searchResults;
+    }
+
+    const showMoreBtn = document.getElementById("showMoreBtn");
+    showMoreBtn.classList.toggle("d-none", data.length === 0);
+  }
+
+  // Separate function for adding click listeners
+  function addImageClickListeners() {
     const cardImages = document.querySelectorAll(".cardImg");
     cardImages.forEach((card) => {
       card.addEventListener("click", (e) => {
@@ -126,22 +177,21 @@ document.addEventListener("DOMContentLoaded", function () {
         });
       });
     });
-
-    const showMoreBtn = document.getElementById("showMoreBtn");
-    if (data.length > 0) {
-      showMoreBtn.classList.remove("d-none");
-    } else {
-      showMoreBtn.classList.add("d-none");
-    }
   }
 
   function performSearch() {
-    searchInput = document.getElementById("searchInput").value;
+    const inputValue = document.getElementById("searchInput").value;
+    if (!inputValue.trim()) {
+      data = [];
+      displayImgs("Please enter a search term");
+      return;
+    }
+    searchInput = inputValue;
+    page = 1;
     searchImgs();
   }
-  performSearch();
 
-  // Start with random images instead of immediate search
+  // Initial load of random images
   fetchRandomImages();
 
   // Event listener for Enter key on search input
