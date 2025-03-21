@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const trimmedInput = searchInput.trim();
       if (!trimmedInput) {
         // Show error message for empty search
-        data = [];
+        // data = [];
         displayImgs("Please enter a search term like:- cars, homes ...");
         return;
       }
