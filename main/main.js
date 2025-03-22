@@ -60,8 +60,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const trimmedInput = searchInput.trim();
       if (!trimmedInput) {
         // Show error message for empty search
-        // data = [];
-        displayImgs("Please enter a search term like:- cars, homes ...");
+        data = [];
+        displayImgs("Please enter a search term ");
         return;
       }
 
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function performSearch() {
     const inputValue = document.getElementById("searchInput").value;
     if (!inputValue.trim()) {
-      data = [];
+      // data = [];
       displayImgs("Please enter a search term");
       return;
     }
@@ -212,11 +212,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Event listener for show more button click
   document.getElementById("showMoreBtn").addEventListener("click", function () {
-    page++;
     if (searchInput === document.getElementById("searchInput").value) {
-      performSearch();
-    } else {
+      page++;
       searchImgs();
+    } else {
+      performSearch();
     }
   });
 });
